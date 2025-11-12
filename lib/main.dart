@@ -1,4 +1,6 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/views/login_view.dart';
+import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/splash_view.dart';
 import 'package:flutter/material.dart';
 
@@ -15,11 +17,12 @@ class SecureChat extends StatelessWidget {
       title: "Secure Chatting",
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: kFontFamily),
-      routes: {SplashView.id: (context) => SplashView()},
+      routes: {
+        SplashView.id: (context) => SplashView(),
+        LoginView.id: (context) => LoginView(),
+        SignupView.id: (context) => SignupView(),
+        },
       initialRoute: SplashView.id,
     );
   }
 }
-
-// git commit -m "first commit"
-// git push -u origin main

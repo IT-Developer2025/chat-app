@@ -1,8 +1,22 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/views/login_view.dart';
 import 'package:flutter/material.dart';
 
-class SplashViewBody extends StatelessWidget {
+class SplashViewBody extends StatefulWidget {
   const SplashViewBody({super.key});
+
+  @override
+  State<SplashViewBody> createState() => _SplashViewBodyState();
+}
+
+class _SplashViewBodyState extends State<SplashViewBody> {
+  @override
+  void initState() {
+    super.initState();
+    Future.delayed(Duration(seconds: 3), () {
+      Navigator.popAndPushNamed(context, LoginView.id);
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
