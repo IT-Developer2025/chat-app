@@ -21,7 +21,7 @@ class SecureChat extends StatelessWidget {
         SplashView.id: (context) => SplashView(),
         LoginView.id: (context) => LoginView(),
         SignupView.id: (context) => SignupView(),
-        },
+      },
       initialRoute: SplashView.id,
     );
   }

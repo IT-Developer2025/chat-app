@@ -1,8 +1,6 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/views/login_view.dart';
-import 'package:chat_app/views/widgets/custom_elevated_button.dart';
-import 'package:chat_app/views/widgets/custom_navigation_link.dart';
-import 'package:chat_app/views/widgets/custom_text_field.dart';
+import 'package:chat_app/views/widgets/custom_auth_form.dart';
 import 'package:flutter/material.dart';
 
 class SignupViewBody extends StatelessWidget {
@@ -49,15 +47,12 @@ class SignupViewBody extends StatelessWidget {
                   ),
                 ],
               ),
-              const CustomTextField(hintText: "البريد الإلكتروني..."),
-              const CustomTextField(hintText: "كلمة المرور..."),
-              const CustomElevatedButton(buttonTitle: "إنشاء حساب"),
-              CustomNavigationLink(
-                title: "!تمتلك حساب بالفعل -",
+              CustomAuthForm(
+                routeName: LoginView.id,
+                buttonTitle: "إنشاء حساب",
+                title: "هل لديك حساب بالفعل! قم بـ - ",
                 linkTitle: "تسجيل الدخول",
-                onTap: () {
-                  Navigator.popAndPushNamed(context, LoginView.id);
-                },
+                snackBarMessage: "إنشاء حساب جديد",
               ),
             ],
           ),

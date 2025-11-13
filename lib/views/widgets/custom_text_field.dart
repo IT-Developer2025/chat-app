@@ -1,19 +1,28 @@
 import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
+  final TextEditingController controller;
+  final String? Function(String?)? validator;
   final String hintText;
-  const CustomTextField({super.key, required this.hintText});
+  const CustomTextField({
+    super.key,
+    required this.hintText,
+    this.validator,
+    required this.controller,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Directionality(
       textDirection: TextDirection.rtl,
       child: TextFormField(
+        controller: controller,
+        validator: validator,
+
         /// Will be worked in the future!
-        // ### controller: ,
-        // ### validator: ,
         // ### autovalidateMode: ,
         style: TextStyle(color: Colors.white, fontSize: 14),
+        textDirection: TextDirection.ltr,
         cursorColor: Colors.lightBlue,
         decoration: InputDecoration(
           hintText: hintText,
