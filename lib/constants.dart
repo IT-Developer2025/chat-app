@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 const String kAppBrandName = "يمن تشات";
 const String kLogo = "assets/images/chat_app_logo.png";
-const String kFontFamily = "Cairo";
+const String kFontFamily = "NotoSansArabic";
 
 // Colors
 const Color kPrimaryColor = Color(0xFF025F8A);
