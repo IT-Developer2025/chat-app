@@ -26,7 +26,7 @@ class SignupViewBody extends StatelessWidget {
             children: [
               Image.asset(kLogo, width: 75, height: 75),
               const Text(
-                "يمن تشات",
+                kAppBrandName,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,

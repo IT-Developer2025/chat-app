@@ -1,4 +1,5 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/views/home_view.dart';
 import 'package:chat_app/views/login_view.dart';
 import 'package:flutter/material.dart';
 
@@ -14,7 +15,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
   void initState() {
     super.initState();
     Future.delayed(Duration(seconds: 3), () {
-      Navigator.popAndPushNamed(context, LoginView.id);
+      Navigator.popAndPushNamed(context, HomeView.id);
     });
   }
 
@@ -37,7 +38,7 @@ class _SplashViewBodyState extends State<SplashViewBody> {
             Image.asset(kLogo, width: 75),
             CircularProgressIndicator(color: Colors.lightBlue, strokeWidth: 2),
             Text(
-              "...تحميل",
+              ". . . جاري التحميل",
               style: TextStyle(
                 color: Colors.white,
                 fontSize: 12,

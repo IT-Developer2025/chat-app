@@ -26,7 +26,7 @@ class LoginViewBody extends StatelessWidget {
             children: [
               Image.asset(kLogo, width: 75, height: 75),
               const Text(
-                "يمن تشات",
+                kAppBrandName,
                 style: TextStyle(
                   color: Colors.white,
                   fontWeight: FontWeight.bold,
@@ -38,7 +38,7 @@ class LoginViewBody extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 children: [
                   Text(
-                    "تسجيل الدخول", // Will be changed
+                    "تسجيل الدخول",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,

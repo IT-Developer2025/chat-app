@@ -18,10 +18,9 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: validator,
-
         /// Will be worked in the future!
         // ### autovalidateMode: ,
-        style: TextStyle(color: Colors.white, fontSize: 14),
+        style: TextStyle(color: Colors.white),
         textDirection: TextDirection.ltr,
         cursorColor: Colors.lightBlue,
         decoration: InputDecoration(

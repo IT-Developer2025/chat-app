@@ -1,4 +1,5 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/views/home_view.dart';
 import 'package:chat_app/views/login_view.dart';
 import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/splash_view.dart';
@@ -21,6 +22,7 @@ class SecureChat extends StatelessWidget {
         SplashView.id: (context) => SplashView(),
         LoginView.id: (context) => LoginView(),
         SignupView.id: (context) => SignupView(),
+        HomeView.id: (context) => HomeView(),
       },
       initialRoute: SplashView.id,
     );

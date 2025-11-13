@@ -1,6 +1,5 @@
 import 'package:chat_app/helper/email_password_validation.dart';
-import 'package:chat_app/helper/show_snack_bar.dart';
-import 'package:chat_app/views/login_view.dart';
+import 'package:chat_app/utils/form_validation.dart';
 import 'package:chat_app/views/widgets/custom_elevated_button.dart';
 import 'package:chat_app/views/widgets/custom_navigation_link.dart';
 import 'package:chat_app/views/widgets/custom_text_field.dart';
@@ -30,25 +29,6 @@ class _CustomAuthFormState extends State<CustomAuthForm> {
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
 
-  void formValidation(BuildContext context) {
-    if (_formKey.currentState!.validate()) {
-      showSnackBar(
-        context: context,
-        message: "تم ${widget.snackBarMessage} بنجاح",
-        backgroundColor: Colors.green,
-      );
-      _emailController.clear();
-      _passwordController.clear();
-    } else {
-      showSnackBar(
-        context: context,
-        message: "حدث خطأ أثناء ${widget.snackBarMessage}",
-        backgroundColor: Colors.redAccent,
-      );
-      throw Exception("حدث خطأ!");
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Form(
@@ -73,7 +53,14 @@ class _CustomAuthFormState extends State<CustomAuthForm> {
           CustomElevatedButton(
             buttonTitle: widget.buttonTitle,
             onPressed: () {
-              formValidation(context);
+              formValidation(
+                context,
+                formKey: _formKey,
+                snackBarMessage: widget.snackBarMessage,
+                routeName: widget.routeName,
+                emailController: _emailController,
+                passwordController: _passwordController,
+              );
             },
           ),
           CustomNavigationLink(
