@@ -8,7 +8,7 @@ class CustomBottomNavigationBarBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 16),
-      child: const Row(
+      child: Row(
         mainAxisAlignment: MainAxisAlignment.center,
         textDirection: TextDirection.rtl,
         spacing: 102,
@@ -18,12 +18,12 @@ class CustomBottomNavigationBarBody extends StatelessWidget {
             title: "دردشات",
           ),
           CustomNavigationIcon(
-            iconPath: "assets/icons/call_icon_unselected.svg",
-            title: "المكالمات",
-          ),
-          CustomNavigationIcon(
             iconPath: "assets/icons/story_icon_unselected.svg",
             title: "القصص",
+          ),
+          CustomNavigationIcon(
+            iconPath: "assets/icons/call_icon_unselected.svg",
+            title: "المكالمات",
           ),
         ],
       ),

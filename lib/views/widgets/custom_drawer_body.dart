@@ -1,5 +1,6 @@
-import 'package:chat_app/constants.dart';
 import 'package:chat_app/views/login_view.dart';
+import 'package:chat_app/views/widgets/custom_list_tile.dart';
+import 'package:chat_app/views/widgets/custom_user_accounts_drawer_header.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawerBody extends StatelessWidget {
@@ -9,39 +10,16 @@ class CustomDrawerBody extends StatelessWidget {
   Widget build(BuildContext context) {
     return ListView(
       children: [
-        UserAccountsDrawerHeader(
-          decoration: BoxDecoration(
-            gradient: LinearGradient(colors: [kPrimaryColor, kSecondaryColor]),
-          ),
-          currentAccountPicture: CircleAvatar(
-            backgroundColor: Colors.lightBlue,
-            child: Image.asset(kLogo),
-          ),
-          accountName: Text("vscode895@gmail.com"),
-          accountEmail: Text("vs code"),
-        ),
-        ListTile(
-          leading: Icon(Icons.home),
-          title: Text(
-            'الصفحة الرئيسية',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+        const CustomUserAccountsDrawerHeader(),
+        CustomListTile(
+          icon: Icons.home,
+          title: 'الصفحة الرئيسية',
           onTap: () {},
         ),
-        ListTile(
-          leading: Icon(Icons.settings),
-          title: Text(
-            'الإعدادات',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
-          onTap: () {},
-        ),
-        ListTile(
-          leading: Icon(Icons.logout),
-          title: Text(
-            'تسجيل الخروج',
-            style: TextStyle(fontWeight: FontWeight.bold),
-          ),
+        CustomListTile(icon: Icons.settings, title: 'الإعدادات', onTap: () {}),
+        CustomListTile(
+          icon: Icons.logout_rounded,
+          title: 'تسجيل الخروج',
           onTap: () {
             Navigator.popAndPushNamed(context, LoginView.id);
           },
