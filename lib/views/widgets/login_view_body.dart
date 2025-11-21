@@ -9,21 +9,54 @@ import 'package:chat_app/views/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-Future<void> firebaseLoginProcess({
-  required String emailAddress,
-  required String password,
+Future<void> firebaseLoginProcess(
+  BuildContext context, {
+  required TextEditingController emailController,
+  required TextEditingController passwordController,
 }) async {
   try {
     await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailAddress,
-      password: password,
+      email: emailController.text,
+      password: passwordController.text,
     );
+    emailController.clear();
+    passwordController.clear();
+    showSnackBar(
+      context: context,
+      message: "تم تسجيل دخول بنجاح",
+      backgroundColor: Colors.green,
+    );
+    Navigator.popAndPushNamed(context, HomeView.id);
   } on FirebaseAuthException catch (e) {
+    print("############## FirebaseAuthException ##############");
+
     if (e.code == 'user-not-found') {
-      print('No user found for that email.');
+      showSnackBar(
+        context: context,
+        message: 'هذا الحساب غير موجود ... يرجى إنشاء حساب جديد',
+        backgroundColor: Colors.redAccent,
+      );
     } else if (e.code == 'wrong-password') {
-      print('Wrong password provided for that user.');
+      showSnackBar(
+        context: context,
+        message: 'كلمة المرور خاطئة',
+        backgroundColor: Colors.redAccent,
+      );
+    } else if (e.code == "user-disabled") {
+      showSnackBar(
+        context: context,
+        message: 'هذا الحساب معطل حاليًا',
+        backgroundColor: Colors.redAccent,
+      );
+    } else if (e.code == "invalid-credential") {
+      showSnackBar(
+        context: context,
+        message: 'البيانات المدخلة غير صحيحة',
+        backgroundColor: Colors.redAccent,
+      );
     }
+  } catch (e) {
+    throw Exception("$e");
   }
 }
 
@@ -109,17 +142,10 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                         try {
                           if (_formKey.currentState!.validate()) {
                             await firebaseLoginProcess(
-                              emailAddress: _emailController.text,
-                              password: _passwordController.text,
+                              context,
+                              emailController: _emailController,
+                              passwordController: _passwordController,
                             );
-                            _emailController.clear();
-                            _passwordController.clear();
-                            showSnackBar(
-                              context: context,
-                              message: "تم تسجيل دخول بنجاح",
-                              backgroundColor: Colors.green,
-                            );
-                            Navigator.popAndPushNamed(context, HomeView.id);
                           } else {
                             showSnackBar(
                               context: context,

@@ -41,7 +41,7 @@ Future<void> firebaseSignUpProcess(
       );
     }
   } catch (e) {
-    print(e);
+    throw Exception("$e");
   }
 }
 

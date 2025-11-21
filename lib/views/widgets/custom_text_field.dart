@@ -8,9 +8,9 @@ class CustomTextField extends StatelessWidget {
   final bool? isObsecure;
   const CustomTextField({
     super.key,
+    required this.controller,
     required this.hintText,
     this.validator,
-    required this.controller,
     this.keyboardType,
     this.isObsecure = false,
   });
