@@ -4,11 +4,12 @@ import 'package:chat_app/views/home_view.dart';
 import 'package:chat_app/views/login_view.dart';
 import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/splash_view.dart';
-// import 'package:firebase_core/firebase_core.dart';
-// import 'package:chat_app/firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:chat_app/firebase_options.dart';
 
 Future<void> main() async {
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const SecureChat());
 }
 

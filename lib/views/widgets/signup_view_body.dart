@@ -1,10 +1,23 @@
 import 'package:chat_app/constants.dart';
+import 'package:chat_app/helper/email_password_validation.dart';
+import 'package:chat_app/utils/form_validation.dart';
 import 'package:chat_app/views/login_view.dart';
-import 'package:chat_app/views/widgets/custom_auth_form.dart';
+import 'package:chat_app/views/widgets/custom_elevated_button.dart';
+import 'package:chat_app/views/widgets/custom_navigation_link.dart';
+import 'package:chat_app/views/widgets/custom_text_field.dart';
 import 'package:flutter/material.dart';
 
-class SignupViewBody extends StatelessWidget {
+class SignupViewBody extends StatefulWidget {
   const SignupViewBody({super.key});
+
+  @override
+  State<SignupViewBody> createState() => _SignupViewBodyState();
+}
+
+class _SignupViewBodyState extends State<SignupViewBody> {
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final GlobalKey<FormState> _formKey = GlobalKey();
 
   @override
   Widget build(BuildContext context) {
@@ -38,7 +51,7 @@ class SignupViewBody extends StatelessWidget {
                 textDirection: TextDirection.rtl,
                 children: [
                   Text(
-                    "إنشاء حساب جديد", // Will be changed
+                    "إنشاء حساب جديد",
                     style: TextStyle(
                       color: Colors.white,
                       fontSize: 18,
@@ -47,12 +60,49 @@ class SignupViewBody extends StatelessWidget {
                   ),
                 ],
               ),
-              CustomAuthForm(
-                routeName: LoginView.id,
-                buttonTitle: "إنشاء حساب",
-                title: "هل لديك حساب بالفعل! قم بـ - ",
-                linkTitle: "تسجيل الدخول",
-                snackBarMessage: "إنشاء حساب جديد",
+              Form(
+                key: _formKey,
+                child: Column(
+                  spacing: 12,
+                  children: [
+                    CustomTextField(
+                      controller: _emailController,
+                      hintText: "البريد الإلكتروني...",
+                      validator: (_) {
+                        return validatingEmail(email: _emailController.text);
+                      },
+                    ),
+                    CustomTextField(
+                      controller: _passwordController,
+                      hintText: "كلمة المرور...",
+                      validator: (_) {
+                        return validatingPassword(
+                          password: _passwordController.text,
+                        );
+                      },
+                    ),
+                    CustomElevatedButton(
+                      buttonTitle: "إنشاء حساب",
+                      onPressed: () {
+                        formValidation(
+                          context,
+                          formKey: _formKey,
+                          snackBarMessage: "إنشاء حساب جديد",
+                          routeName: LoginView.id,
+                          emailController: _emailController,
+                          passwordController: _passwordController,
+                        );
+                      },
+                    ),
+                    CustomNavigationLink(
+                      title: "هل لديك حساب بالفعل! قم بـ - ",
+                      linkTitle: "تسجيل الدخول",
+                      onTap: () {
+                        Navigator.popAndPushNamed(context, LoginView.id);
+                      },
+                    ),
+                  ],
+                ),
               ),
             ],
           ),

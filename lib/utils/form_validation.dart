@@ -20,7 +20,7 @@ void formValidation(
       );
 
       /// [routeName] is name of the destination that you'll be redirected
-      /// to it if you press the link in the below of both screens [LoginView]
+      /// to it, if you press the link in the below of both screens [LoginView]
       /// or [SignupView], So if the current screen is the [LoginView] the
       /// [routeName] is equal to "SignupView" and if the current screen is
       /// [SignupView] so the [routeName] will be equal to "LoginView".
