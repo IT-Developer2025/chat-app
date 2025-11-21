@@ -1,26 +1,96 @@
 import 'package:chat_app/constants.dart';
-import 'package:chat_app/views/widgets/custom_bottom_navigation_bar_body.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
-class CustomBottomNavigationBar extends StatelessWidget {
-  const CustomBottomNavigationBar({super.key});
+class CustomHomeBottomNavBar extends StatelessWidget {
+  final int currentIndex;
+  final ValueChanged<int> onTap;
+
+  const CustomHomeBottomNavBar({
+    super.key,
+    required this.currentIndex,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      height: 75,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(16),
-          topRight: Radius.circular(16),
+    return Directionality(
+      textDirection: TextDirection.rtl,
+      child: Container(
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          gradient: const LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: [kPrimaryColor, kSecondaryColor],
+          ),
+          borderRadius: const BorderRadius.only(
+            topLeft: Radius.circular(16),
+            topRight: Radius.circular(16),
+          ),
         ),
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [kPrimaryColor, kSecondaryColor],
+        child: BottomNavigationBar(
+          selectedItemColor: Colors.white,
+          unselectedItemColor: Colors.white,
+          backgroundColor: Colors.transparent,
+          currentIndex: currentIndex,
+          onTap: onTap,
+          items: [
+            BottomNavigationBarItem(
+              icon:
+                  currentIndex == 0
+                      ? SvgPicture.asset(
+                        "assets/icons/filled/chatbubble.svg",
+                        height: 25,
+                        width: 25,
+                        color: Colors.white,
+                      )
+                      : SvgPicture.asset(
+                        "assets/icons/outline/chatbubble-outline.svg",
+                        height: 25,
+                        width: 25,
+                        color: Colors.white,
+                      ),
+              label: "المحادثة",
+              tooltip: "يوصلك إلى قسم المحادثات",
+            ),
+            BottomNavigationBarItem(
+              icon:
+                  currentIndex == 1
+                      ? SvgPicture.asset(
+                        "assets/icons/filled/phone-portrait.svg",
+                        height: 25,
+                        width: 25,
+                        color: Colors.white,
+                      )
+                      : SvgPicture.asset(
+                        "assets/icons/outline/phone-portrait-outline.svg",
+                        height: 25,
+                        width: 25,
+                        color: Colors.white,
+                      ),
+              label: "الحالات",
+            ),
+            BottomNavigationBarItem(
+              icon:
+                  currentIndex == 2
+                      ? SvgPicture.asset(
+                        "assets/icons/filled/call.svg",
+                        height: 25,
+                        width: 25,
+                        color: Colors.white,
+                      )
+                      : SvgPicture.asset(
+                        "assets/icons/outline/call-outline.svg",
+                        height: 25,
+                        width: 25,
+                        color: Colors.white,
+                      ),
+              label: "القصص",
+            ),
+          ],
         ),
       ),
-      child: const CustomBottomNavigationBarBody(),
     );
   }
 }

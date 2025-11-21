@@ -8,7 +8,11 @@ class CustomAppBar extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        gradient: LinearGradient(colors: [kPrimaryColor, kSecondaryColor]),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [kPrimaryColor, kSecondaryColor],
+        ),
       ),
       child: Padding(
         padding: const EdgeInsets.all(8.0),
