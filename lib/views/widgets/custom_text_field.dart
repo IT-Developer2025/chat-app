@@ -2,13 +2,17 @@ import 'package:flutter/material.dart';
 
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
-  final String? Function(String?)? validator;
   final String hintText;
+  final String? Function(String?)? validator;
+  final TextInputType? keyboardType;
+  final bool? isObsecure;
   const CustomTextField({
     super.key,
     required this.hintText,
     this.validator,
     required this.controller,
+    this.keyboardType,
+    this.isObsecure = false,
   });
 
   @override
@@ -18,6 +22,9 @@ class CustomTextField extends StatelessWidget {
       child: TextFormField(
         controller: controller,
         validator: validator,
+        keyboardType: keyboardType,
+        obscureText: isObsecure!,
+
         /// Will be worked in the future!
         // ### autovalidateMode: ,
         style: TextStyle(color: Colors.white),

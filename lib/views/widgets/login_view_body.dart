@@ -1,11 +1,31 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/helper/email_password_validation.dart';
-import 'package:chat_app/utils/form_validation.dart';
+import 'package:chat_app/helper/show_snack_bar.dart';
+import 'package:chat_app/views/home_view.dart';
 import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/widgets/custom_elevated_button.dart';
 import 'package:chat_app/views/widgets/custom_navigation_link.dart';
 import 'package:chat_app/views/widgets/custom_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+Future<void> firebaseLoginProcess({
+  required String emailAddress,
+  required String password,
+}) async {
+  try {
+    await FirebaseAuth.instance.signInWithEmailAndPassword(
+      email: emailAddress,
+      password: password,
+    );
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'user-not-found') {
+      print('No user found for that email.');
+    } else if (e.code == 'wrong-password') {
+      print('Wrong password provided for that user.');
+    }
+  }
+}
 
 class LoginViewBody extends StatefulWidget {
   const LoginViewBody({super.key});
@@ -68,6 +88,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                     CustomTextField(
                       controller: _emailController,
                       hintText: "البريد الإلكتروني...",
+                      keyboardType: TextInputType.emailAddress,
                       validator: (_) {
                         return validatingEmail(email: _emailController.text);
                       },
@@ -75,6 +96,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                     CustomTextField(
                       controller: _passwordController,
                       hintText: "كلمة المرور...",
+                      isObsecure: true,
                       validator: (_) {
                         return validatingPassword(
                           password: _passwordController.text,
@@ -83,15 +105,31 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                     ),
                     CustomElevatedButton(
                       buttonTitle: "تسجيل الدخول",
-                      onPressed: () {
-                        formValidation(
-                          context,
-                          formKey: _formKey,
-                          snackBarMessage: "تسجيل الدخول",
-                          routeName: SignupView.id,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                        );
+                      onPressed: () async {
+                        try {
+                          if (_formKey.currentState!.validate()) {
+                            await firebaseLoginProcess(
+                              emailAddress: _emailController.text,
+                              password: _passwordController.text,
+                            );
+                            _emailController.clear();
+                            _passwordController.clear();
+                            showSnackBar(
+                              context: context,
+                              message: "تم تسجيل دخول بنجاح",
+                              backgroundColor: Colors.green,
+                            );
+                            Navigator.popAndPushNamed(context, HomeView.id);
+                          } else {
+                            showSnackBar(
+                              context: context,
+                              message: "حدث خطأ أثناء محاولة تسجيل الدخول",
+                              backgroundColor: Colors.redAccent,
+                            );
+                          }
+                        } catch (e) {
+                          throw Exception("Error while [LOGIN-IN]! [$e]");
+                        }
                       },
                     ),
                     CustomNavigationLink(

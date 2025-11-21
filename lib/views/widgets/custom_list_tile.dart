@@ -14,9 +14,10 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: icon,
+      trailing: icon,
       title: Text(
         title,
+        textDirection: TextDirection.rtl,
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
       ),
       onTap: onTap,

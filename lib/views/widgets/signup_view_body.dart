@@ -1,11 +1,49 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/helper/email_password_validation.dart';
-import 'package:chat_app/utils/form_validation.dart';
+import 'package:chat_app/helper/show_snack_bar.dart';
 import 'package:chat_app/views/login_view.dart';
 import 'package:chat_app/views/widgets/custom_elevated_button.dart';
 import 'package:chat_app/views/widgets/custom_navigation_link.dart';
 import 'package:chat_app/views/widgets/custom_text_field.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+Future<void> firebaseSignUpProcess(
+  BuildContext context, {
+  required TextEditingController emailController,
+  required TextEditingController passwordController,
+}) async {
+  try {
+    await FirebaseAuth.instance.createUserWithEmailAndPassword(
+      email: emailController.text,
+      password: passwordController.text,
+    );
+    emailController.clear();
+    passwordController.clear();
+    showSnackBar(
+      context: context,
+      message: "تم إنشاء حسابك بنجاح",
+      backgroundColor: Colors.green,
+    );
+    Navigator.popAndPushNamed(context, LoginView.id);
+  } on FirebaseAuthException catch (e) {
+    if (e.code == 'weak-password') {
+      showSnackBar(
+        context: context,
+        message: 'كلمة المرور المستخدمة ضعيفة جدًا',
+        backgroundColor: Colors.redAccent,
+      );
+    } else if (e.code == 'email-already-in-use') {
+      showSnackBar(
+        context: context,
+        message: 'هذا الحساب مستخدم بالفعل',
+        backgroundColor: Colors.redAccent,
+      );
+    }
+  } catch (e) {
+    print(e);
+  }
+}
 
 class SignupViewBody extends StatefulWidget {
   const SignupViewBody({super.key});
@@ -67,6 +105,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                   children: [
                     CustomTextField(
                       controller: _emailController,
+                      keyboardType: TextInputType.emailAddress,
                       hintText: "البريد الإلكتروني...",
                       validator: (_) {
                         return validatingEmail(email: _emailController.text);
@@ -75,6 +114,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                     CustomTextField(
                       controller: _passwordController,
                       hintText: "كلمة المرور...",
+                      isObsecure: true,
                       validator: (_) {
                         return validatingPassword(
                           password: _passwordController.text,
@@ -83,15 +123,24 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                     ),
                     CustomElevatedButton(
                       buttonTitle: "إنشاء حساب",
-                      onPressed: () {
-                        formValidation(
-                          context,
-                          formKey: _formKey,
-                          snackBarMessage: "إنشاء حساب جديد",
-                          routeName: LoginView.id,
-                          emailController: _emailController,
-                          passwordController: _passwordController,
-                        );
+                      onPressed: () async {
+                        try {
+                          if (_formKey.currentState!.validate()) {
+                            await firebaseSignUpProcess(
+                              context,
+                              emailController: _emailController,
+                              passwordController: _passwordController,
+                            );
+                          } else {
+                            showSnackBar(
+                              context: context,
+                              message: "حدث خطأ أثناء محاولة إنشاء حساب",
+                              backgroundColor: Colors.redAccent,
+                            );
+                          }
+                        } catch (e) {
+                          throw Exception("Error while [SIGNING-UP]! [$e]");
+                        }
                       },
                     ),
                     CustomNavigationLink(
