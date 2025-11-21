@@ -14,15 +14,15 @@ class CustomBottomNavigationBarBody extends StatelessWidget {
         spacing: 102,
         children: [
           CustomNavigationIcon(
-            iconPath: "assets/icons/chat_icon_unselected.svg",
+            iconPath: "assets/icons/outline/chatbubble-outline.svg",
             title: "دردشات",
           ),
           CustomNavigationIcon(
-            iconPath: "assets/icons/story_icon_unselected.svg",
+            iconPath: "assets/icons/outline/phone-portrait-outline.svg",
             title: "القصص",
           ),
           CustomNavigationIcon(
-            iconPath: "assets/icons/call_icon_unselected.svg",
+            iconPath: "assets/icons/outline/call-outline.svg",
             title: "المكالمات",
           ),
         ],

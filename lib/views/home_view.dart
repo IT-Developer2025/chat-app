@@ -16,8 +16,8 @@ class HomeView extends StatelessWidget {
         flexibleSpace: CustomAppBar(),
       ),
       drawer: const CustomDrawer(),
-      bottomNavigationBar: const CustomBottomNavigationBar(),
       body: const HomeViewBody(),
+      bottomNavigationBar: const CustomBottomNavigationBar(),
     );
   }
 }

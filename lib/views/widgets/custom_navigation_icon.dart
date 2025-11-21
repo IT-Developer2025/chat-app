@@ -8,7 +8,7 @@ class CustomNavigationIcon extends StatelessWidget {
   const CustomNavigationIcon({
     super.key,
     required this.iconPath,
-    required this.title, 
+    required this.title,
     this.onTap,
   });
 
@@ -18,7 +18,12 @@ class CustomNavigationIcon extends StatelessWidget {
       onTap: () {},
       child: Column(
         children: [
-          SvgPicture.asset(iconPath),
+          SvgPicture.asset(
+            iconPath,
+            width: 24,
+            height: 24,
+            color: Colors.white,
+          ),
           Text(
             title,
             style: TextStyle(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class CustomListTile extends StatelessWidget {
-  final IconData icon;
+  final Widget? icon;
   final String title;
   final VoidCallback onTap;
   const CustomListTile({
@@ -14,7 +14,7 @@ class CustomListTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return ListTile(
-      leading: Icon(icon, size: 24),
+      leading: icon,
       title: Text(
         title,
         style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),

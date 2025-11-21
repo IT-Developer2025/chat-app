@@ -36,6 +36,7 @@ dependencies:
   cupertino_icons: ^1.0.8
   flutter_svg: ^2.2.2
   firebase_core: ^4.2.1
+  firebase_auth: ^6.1.2
 
 dev_dependencies:
   flutter_test:
@@ -63,8 +64,8 @@ flutter:
   assets:
     - assets/images/
     - assets/icons/
-    - assets/icons/light_mode/
-    - assets/icons/dark_mode/
+    - assets/icons/filled/
+    - assets/icons/outline/
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
