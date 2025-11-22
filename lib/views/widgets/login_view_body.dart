@@ -7,6 +7,7 @@ import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/widgets/custom_elevated_button.dart';
 import 'package:chat_app/views/widgets/custom_navigation_link.dart';
 import 'package:chat_app/views/widgets/custom_text_field.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
@@ -35,59 +36,67 @@ class _LoginViewBodyState extends State<LoginViewBody> {
   }
 
   Future<void> _handleLogin(BuildContext context) async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => isLoading = true);
-      try {
-        await _authService.login(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        _emailController.clear();
-        _passwordController.clear();
-        showSnackBar(
-          context: context,
-          message: 'تم تسجيل دخولك بنجاح',
-          backgroundColor: Colors.green,
-        );
-        if (mounted) {
-          Navigator.popAndPushNamed(context, HomeView.id);
-        }
-      } on FirebaseAuthException catch (e) {
-        String message;
-        if (e.code == 'user-not-found') {
-          message = 'هذا الحساب غير موجود ... يرجى إنشاء حساب جديد';
-        } else if (e.code == 'wrong-password') {
-          message = 'كلمة المرور خاطئة';
-        } else if (e.code == "network-request-failed") {
-          message = 'تحقق من اتصالك بالإنترنت';
-        } else if (e.code == "too-many-requests") {
-          message = 'لقد استنفدت عدد المحاولات. ارجع في وقت لاحق';
-        } else if (e.code == "user-disabled") {
-          message = 'هذا الحساب معطل حاليًا';
-        } else if (e.code == "invalid-credential") {
-          message = 'البيانات المدخلة غير صحيحة';
-        } else {
-          message = 'حدث خطأ أثناء عملية تسجيل الدخول';
-        }
-        showSnackBar(
-          context: context,
-          message: message,
-          backgroundColor: Colors.redAccent,
-        );
-      } catch (e) {
-        throw Exception("Error while [LOGIN-IN]! [$e]");
-      } finally {
-        if (mounted) {
-          setState(() => isLoading = false);
-        }
-      }
-    } else {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       showSnackBar(
         context: context,
-        message: "حدث خطأ أثناء محاولة تسجيل الدخول",
+        message: 'تحقق من اتصالك بالإنترنت',
         backgroundColor: Colors.redAccent,
       );
-    }
+    } // endIf
+    else {
+      if (_formKey.currentState!.validate()) {
+        setState(() => isLoading = true);
+        try {
+          await _authService.login(
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
+          _emailController.clear();
+          _passwordController.clear();
+          showSnackBar(
+            context: context,
+            message: 'تم تسجيل دخولك بنجاح',
+            backgroundColor: Colors.green,
+          );
+          if (mounted) {
+            Navigator.popAndPushNamed(context, HomeView.id);
+          }
+        } on FirebaseAuthException catch (e) {
+          String message;
+          if (e.code == 'user-not-found') {
+            message = 'هذا الحساب غير موجود ... يرجى إنشاء حساب جديد';
+          } else if (e.code == 'wrong-password') {
+            message = 'كلمة المرور خاطئة';
+          } else if (e.code == "too-many-requests") {
+            message = 'لقد استنفدت عدد المحاولات. ارجع في وقت لاحق';
+          } else if (e.code == "user-disabled") {
+            message = 'هذا الحساب معطل حاليًا';
+          } else if (e.code == "invalid-credential") {
+            message = 'البيانات المدخلة غير صحيحة';
+          } else {
+            message = 'حدث خطأ أثناء عملية تسجيل الدخول';
+          }
+          showSnackBar(
+            context: context,
+            message: message,
+            backgroundColor: Colors.redAccent,
+          );
+        } catch (e) {
+          throw Exception("Error while [LOGIN-IN]! [$e]");
+        } finally {
+          if (mounted) {
+            setState(() => isLoading = false);
+          }
+        }
+      } else {
+        showSnackBar(
+          context: context,
+          message: "حدث خطأ أثناء محاولة تسجيل الدخول",
+          backgroundColor: Colors.redAccent,
+        );
+      } // endIfElse
+    } // endIfElse
   }
 
   @override

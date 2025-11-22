@@ -9,6 +9,7 @@ import 'package:chat_app/views/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 class SignupViewBody extends StatefulWidget {
   const SignupViewBody({super.key});
@@ -27,62 +28,71 @@ class _SignupViewBodyState extends State<SignupViewBody> {
 
   @override
   void dispose() {
+    // Disposing controllers after using them, for better performance!
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
   }
 
   Future<void> _handleSignUp() async {
-    if (_formKey.currentState!.validate()) {
-      setState(() => isLoading = true);
-      try {
-        await _authService.signUp(
-          email: _emailController.text,
-          password: _passwordController.text,
-        );
-        _emailController.clear();
-        _passwordController.clear();
-        showSnackBar(
-          context: context,
-          message: "تم إنشاء حسابك بنجاح",
-          backgroundColor: Colors.green,
-        );
-        if (mounted) {
-          Navigator.pushReplacementNamed(context, LoginView.id);
-        }
-      } on FirebaseAuthException catch (e) {
-        String message;
-        if (e.code == 'weak-password') {
-          message = 'كلمة المرور المستخدمة ضعيفة جدًا';
-        } else if (e.code == 'email-already-in-use') {
-          message = 'هذا الحساب مستخدم بالفعل';
-        } else if (e.code == "network-request-failed") {
-          message = 'تحقق من اتصالك بالإنترنت';
-        } else if (e.code == "too-many-requests") {
-          message = 'لقد استنفدت عدد المحاولات. ارجع في وقت لاحق';
-        }
-        else {
-          message = 'حدث خطأ في المصادقة: ${e.message}';
-        }
-        showSnackBar(
-          context: context,
-          message: message,
-          backgroundColor: Colors.redAccent,
-        );
-      } catch (e) {
-        throw Exception("Error while [SIGNING-UP]! [$e]");
-      } finally {
-        if (mounted) {
-          setState(() => isLoading = false);
-        }
-      }
-    } else {
+    var connectivityResult = await (Connectivity().checkConnectivity());
+    if (connectivityResult.contains(ConnectivityResult.none)) {
       showSnackBar(
         context: context,
-        message: "الرجاء التحقق من صحة البيانات المدخلة",
+        message: 'تحقق من اتصالك بالإنترنت',
         backgroundColor: Colors.redAccent,
       );
-    }
+    } // endIf
+    else {
+      if (_formKey.currentState!.validate()) {
+        setState(() => isLoading = true);
+        try {
+          await _authService.signUp(
+            email: _emailController.text,
+            password: _passwordController.text,
+          );
+          _emailController.clear();
+          _passwordController.clear();
+          showSnackBar(
+            context: context,
+            message: "تم إنشاء حسابك بنجاح",
+            backgroundColor: Colors.green,
+          );
+          if (mounted) {
+            Navigator.popAndPushNamed(context, LoginView.id);
+          }
+        } on FirebaseAuthException catch (e) {
+          String message;
+          if (e.code == 'weak-password') {
+            message = 'كلمة المرور المستخدمة ضعيفة جدًا';
+          } else if (e.code == 'email-already-in-use') {
+            message = 'هذا الحساب مستخدم بالفعل';
+          } else if (e.code == "too-many-requests") {
+            message = 'لقد استنفدت عدد المحاولات. ارجع في وقت لاحق';
+          } else {
+            message = 'حدث خطأ في المصادقة: ${e.message}';
+          }
+          showSnackBar(
+            context: context,
+            message: message,
+            backgroundColor: Colors.redAccent,
+          );
+        } catch (e) {
+          throw Exception("Error while [SIGNING-UP]! [$e]");
+        } finally {
+          if (mounted) {
+            setState(() => isLoading = false);
+          }
+        }
+      } // endIf
+      else {
+        showSnackBar(
+          context: context,
+          message: "الرجاء التحقق من صحة البيانات المدخلة",
+          backgroundColor: Colors.redAccent,
+        );
+      } // endIfElse
+    } // endIfElse
   }
 
   @override
