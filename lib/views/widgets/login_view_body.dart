@@ -1,6 +1,7 @@
 import 'package:chat_app/constants.dart';
 import 'package:chat_app/helper/email_password_validation.dart';
 import 'package:chat_app/helper/show_snack_bar.dart';
+import 'package:chat_app/services/auth_service.dart';
 import 'package:chat_app/views/home_view.dart';
 import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/widgets/custom_elevated_button.dart';
@@ -8,57 +9,7 @@ import 'package:chat_app/views/widgets/custom_navigation_link.dart';
 import 'package:chat_app/views/widgets/custom_text_field.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
-Future<void> firebaseLoginProcess(
-  BuildContext context, {
-  required TextEditingController emailController,
-  required TextEditingController passwordController,
-}) async {
-  try {
-    await FirebaseAuth.instance.signInWithEmailAndPassword(
-      email: emailController.text,
-      password: passwordController.text,
-    );
-    emailController.clear();
-    passwordController.clear();
-    showSnackBar(
-      context: context,
-      message: "تم تسجيل دخول بنجاح",
-      backgroundColor: Colors.green,
-    );
-    Navigator.popAndPushNamed(context, HomeView.id);
-  } on FirebaseAuthException catch (e) {
-    print("############## FirebaseAuthException ##############");
-
-    if (e.code == 'user-not-found') {
-      showSnackBar(
-        context: context,
-        message: 'هذا الحساب غير موجود ... يرجى إنشاء حساب جديد',
-        backgroundColor: Colors.redAccent,
-      );
-    } else if (e.code == 'wrong-password') {
-      showSnackBar(
-        context: context,
-        message: 'كلمة المرور خاطئة',
-        backgroundColor: Colors.redAccent,
-      );
-    } else if (e.code == "user-disabled") {
-      showSnackBar(
-        context: context,
-        message: 'هذا الحساب معطل حاليًا',
-        backgroundColor: Colors.redAccent,
-      );
-    } else if (e.code == "invalid-credential") {
-      showSnackBar(
-        context: context,
-        message: 'البيانات المدخلة غير صحيحة',
-        backgroundColor: Colors.redAccent,
-      );
-    }
-  } catch (e) {
-    throw Exception("$e");
-  }
-}
+import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
 
 class LoginViewBody extends StatefulWidget {
   const LoginViewBody({super.key});
@@ -71,104 +22,162 @@ class _LoginViewBodyState extends State<LoginViewBody> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
+  final AuthService _authService = AuthService();
+
+  bool isLoading = false;
+
+  @override
+  void dispose() {
+    // Disposing controllers after using them, for better performance!
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _handleLogin(BuildContext context) async {
+    if (_formKey.currentState!.validate()) {
+      setState(() => isLoading = true);
+      try {
+        await _authService.login(
+          email: _emailController.text,
+          password: _passwordController.text,
+        );
+        _emailController.clear();
+        _passwordController.clear();
+        showSnackBar(
+          context: context,
+          message: 'تم تسجيل دخولك بنجاح',
+          backgroundColor: Colors.green,
+        );
+        if (mounted) {
+          Navigator.popAndPushNamed(context, HomeView.id);
+        }
+      } on FirebaseAuthException catch (e) {
+        String message;
+        if (e.code == 'user-not-found') {
+          message = 'هذا الحساب غير موجود ... يرجى إنشاء حساب جديد';
+        } else if (e.code == 'wrong-password') {
+          message = 'كلمة المرور خاطئة';
+        } else if (e.code == "network-request-failed") {
+          message = 'تحقق من اتصالك بالإنترنت';
+        } else if (e.code == "too-many-requests") {
+          message = 'لقد استنفدت عدد المحاولات. ارجع في وقت لاحق';
+        } else if (e.code == "user-disabled") {
+          message = 'هذا الحساب معطل حاليًا';
+        } else if (e.code == "invalid-credential") {
+          message = 'البيانات المدخلة غير صحيحة';
+        } else {
+          message = 'حدث خطأ أثناء عملية تسجيل الدخول';
+        }
+        showSnackBar(
+          context: context,
+          message: message,
+          backgroundColor: Colors.redAccent,
+        );
+      } catch (e) {
+        throw Exception("Error while [LOGIN-IN]! [$e]");
+      } finally {
+        if (mounted) {
+          setState(() => isLoading = false);
+        }
+      }
+    } else {
+      showSnackBar(
+        context: context,
+        message: "حدث خطأ أثناء محاولة تسجيل الدخول",
+        backgroundColor: Colors.redAccent,
+      );
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(16),
-      width: double.infinity,
-      decoration: const BoxDecoration(
-        gradient: LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [kPrimaryColor, kSecondaryColor],
-        ),
-      ),
-      child: Center(
-        child: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            spacing: 12,
-            children: [
-              Image.asset(kLogo, width: 75, height: 75),
-              const Text(
-                kAppBrandName,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 28,
-                ),
-              ),
-              const SizedBox(height: 64),
-              const Row(
-                textDirection: TextDirection.rtl,
+    return ModalProgressHUD(
+      inAsyncCall: isLoading,
+      child: Scaffold(
+        body: Container(
+          padding: EdgeInsets.all(16),
+          width: double.infinity,
+          decoration: const BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: [kPrimaryColor, kSecondaryColor],
+            ),
+          ),
+          child: Center(
+            child: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                spacing: 12,
                 children: [
-                  Text(
-                    "تسجيل الدخول",
+                  Image.asset(kLogo, width: 75, height: 75),
+                  const Text(
+                    kAppBrandName,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18,
                       fontWeight: FontWeight.bold,
+                      fontSize: 28,
+                    ),
+                  ),
+                  const SizedBox(height: 64),
+                  const Row(
+                    textDirection: TextDirection.rtl,
+                    children: [
+                      Text(
+                        "تسجيل الدخول",
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ],
+                  ),
+                  Form(
+                    key: _formKey,
+                    child: Column(
+                      spacing: 12,
+                      children: [
+                        CustomTextField(
+                          controller: _emailController,
+                          hintText: "البريد الإلكتروني...",
+                          keyboardType: TextInputType.emailAddress,
+                          validator: (_) {
+                            return validatingEmail(
+                              email: _emailController.text,
+                            );
+                          },
+                        ),
+                        CustomTextField(
+                          controller: _passwordController,
+                          hintText: "كلمة المرور...",
+                          isObsecure: true,
+                          validator: (_) {
+                            return validatingPassword(
+                              password: _passwordController.text,
+                            );
+                          },
+                        ),
+                        CustomElevatedButton(
+                          buttonTitle: "تسجيل الدخول",
+                          onPressed: () async {
+                            await _handleLogin(context);
+                          },
+                        ),
+                        CustomNavigationLink(
+                          title: "لا تمتلك حساب! قم بـ - ",
+                          linkTitle: "إنشاء حساب",
+                          onTap: () {
+                            Navigator.popAndPushNamed(context, SignupView.id);
+                          },
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-              Form(
-                key: _formKey,
-                child: Column(
-                  spacing: 12,
-                  children: [
-                    CustomTextField(
-                      controller: _emailController,
-                      hintText: "البريد الإلكتروني...",
-                      keyboardType: TextInputType.emailAddress,
-                      validator: (_) {
-                        return validatingEmail(email: _emailController.text);
-                      },
-                    ),
-                    CustomTextField(
-                      controller: _passwordController,
-                      hintText: "كلمة المرور...",
-                      isObsecure: true,
-                      validator: (_) {
-                        return validatingPassword(
-                          password: _passwordController.text,
-                        );
-                      },
-                    ),
-                    CustomElevatedButton(
-                      buttonTitle: "تسجيل الدخول",
-                      onPressed: () async {
-                        try {
-                          if (_formKey.currentState!.validate()) {
-                            await firebaseLoginProcess(
-                              context,
-                              emailController: _emailController,
-                              passwordController: _passwordController,
-                            );
-                          } else {
-                            showSnackBar(
-                              context: context,
-                              message: "حدث خطأ أثناء محاولة تسجيل الدخول",
-                              backgroundColor: Colors.redAccent,
-                            );
-                          }
-                        } catch (e) {
-                          throw Exception("Error while [LOGIN-IN]! [$e]");
-                        }
-                      },
-                    ),
-                    CustomNavigationLink(
-                      title: "لا تمتلك حساب! قم بـ - ",
-                      linkTitle: "إنشاء حساب",
-                      onTap: () {
-                        Navigator.popAndPushNamed(context, SignupView.id);
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ],
+            ),
           ),
         ),
       ),
