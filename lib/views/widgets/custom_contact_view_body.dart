@@ -16,6 +16,5 @@ class ContactViewBody extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }

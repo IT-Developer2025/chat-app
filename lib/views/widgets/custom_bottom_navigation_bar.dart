@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 class CustomHomeBottomNavBar extends StatelessWidget {
   final int currentIndex;
-  final ValueChanged<int> onTap;
+  final void Function(int)? onTap;
 
   const CustomHomeBottomNavBar({
     super.key,
@@ -18,13 +18,13 @@ class CustomHomeBottomNavBar extends StatelessWidget {
       textDirection: TextDirection.rtl,
       child: Container(
         padding: const EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          gradient: const LinearGradient(
+        decoration: const BoxDecoration(
+          gradient:  LinearGradient(
             begin: Alignment.topLeft,
             end: Alignment.bottomRight,
             colors: [kPrimaryColor, kSecondaryColor],
           ),
-          borderRadius: const BorderRadius.only(
+          borderRadius:  BorderRadius.only(
             topLeft: Radius.circular(16),
             topRight: Radius.circular(16),
           ),

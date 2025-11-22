@@ -16,6 +16,5 @@ class StoriesViewBody extends StatelessWidget {
         ],
       ),
     );
-    ;
   }
 }
