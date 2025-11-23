@@ -34,4 +34,14 @@ class AuthService {
       throw Exception("An unknown error occurred: $e");
     }
   }
+
+  Future<void> logout() async {
+    try {
+      await _auth.signOut();
+    } on FirebaseException catch (e) {
+      throw e;
+    } catch (e) {
+      throw Exception(e);
+    }
+  }
 }

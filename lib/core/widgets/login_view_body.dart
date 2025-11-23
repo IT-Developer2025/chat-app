@@ -1,24 +1,25 @@
-import 'package:chat_app/constants.dart';
-import 'package:chat_app/helper/email_password_validation.dart';
-import 'package:chat_app/helper/show_snack_bar.dart';
-import 'package:chat_app/services/auth_service.dart';
-import 'package:chat_app/views/login_view.dart';
+import 'package:chat_app/core/constants/constants.dart';
+import 'package:chat_app/core/utils/email_password_validation.dart';
+import 'package:chat_app/core/utils/show_snack_bar.dart';
+import 'package:chat_app/features/auth/services/auth_service.dart';
+import 'package:chat_app/views/home_view.dart';
+import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/views/widgets/custom_elevated_button.dart';
 import 'package:chat_app/views/widgets/custom_navigation_link.dart';
 import 'package:chat_app/views/widgets/custom_text_field.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
-class SignupViewBody extends StatefulWidget {
-  const SignupViewBody({super.key});
+class LoginViewBody extends StatefulWidget {
+  const LoginViewBody({super.key});
 
   @override
-  State<SignupViewBody> createState() => _SignupViewBodyState();
+  State<LoginViewBody> createState() => _LoginViewBodyState();
 }
 
-class _SignupViewBodyState extends State<SignupViewBody> {
+class _LoginViewBodyState extends State<LoginViewBody> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final GlobalKey<FormState> _formKey = GlobalKey();
@@ -34,7 +35,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
     super.dispose();
   }
 
-  Future<void> _handleSignUp() async {
+  Future<void> _handleLogin(BuildContext context) async {
     var connectivityResult = await (Connectivity().checkConnectivity());
     if (connectivityResult.contains(ConnectivityResult.none)) {
       showSnackBar(
@@ -47,7 +48,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
       if (_formKey.currentState!.validate()) {
         setState(() => isLoading = true);
         try {
-          await _authService.signUp(
+          await _authService.login(
             email: _emailController.text,
             password: _passwordController.text,
           );
@@ -55,22 +56,26 @@ class _SignupViewBodyState extends State<SignupViewBody> {
           _passwordController.clear();
           showSnackBar(
             context: context,
-            message: "تم إنشاء حسابك بنجاح",
+            message: 'تم تسجيل دخولك بنجاح',
             backgroundColor: Colors.green,
           );
           if (mounted) {
-            Navigator.popAndPushNamed(context, LoginView.id);
+            Navigator.popAndPushNamed(context, HomeView.id);
           }
         } on FirebaseAuthException catch (e) {
           String message;
-          if (e.code == 'weak-password') {
-            message = 'كلمة المرور المستخدمة ضعيفة جدًا';
-          } else if (e.code == 'email-already-in-use') {
-            message = 'هذا الحساب مستخدم بالفعل';
+          if (e.code == 'user-not-found') {
+            message = 'هذا الحساب غير موجود ... يرجى إنشاء حساب جديد';
+          } else if (e.code == 'wrong-password') {
+            message = 'كلمة المرور خاطئة';
           } else if (e.code == "too-many-requests") {
             message = 'لقد استنفدت عدد المحاولات. ارجع في وقت لاحق';
+          } else if (e.code == "user-disabled") {
+            message = 'هذا الحساب معطل حاليًا';
+          } else if (e.code == "invalid-credential") {
+            message = 'البيانات المدخلة غير صحيحة';
           } else {
-            message = 'حدث خطأ في المصادقة: ${e.message}';
+            message = 'حدث خطأ أثناء عملية تسجيل الدخول';
           }
           showSnackBar(
             context: context,
@@ -78,17 +83,16 @@ class _SignupViewBodyState extends State<SignupViewBody> {
             backgroundColor: Colors.redAccent,
           );
         } catch (e) {
-          throw Exception("Error while [SIGNING-UP]! [$e]");
+          throw Exception("Error while [LOGIN-IN]! [$e]");
         } finally {
           if (mounted) {
             setState(() => isLoading = false);
           }
         }
-      } // endIf
-      else {
+      } else {
         showSnackBar(
           context: context,
-          message: "الرجاء التحقق من صحة البيانات المدخلة",
+          message: "حدث خطأ أثناء محاولة تسجيل الدخول",
           backgroundColor: Colors.redAccent,
         );
       } // endIfElse
@@ -130,7 +134,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                     textDirection: TextDirection.rtl,
                     children: [
                       Text(
-                        "إنشاء حساب جديد",
+                        "تسجيل الدخول",
                         style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -146,8 +150,8 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                       children: [
                         CustomTextField(
                           controller: _emailController,
-                          keyboardType: TextInputType.emailAddress,
                           hintText: "البريد الإلكتروني...",
+                          keyboardType: TextInputType.emailAddress,
                           validator: (_) {
                             return validatingEmail(
                               email: _emailController.text,
@@ -165,16 +169,16 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                           },
                         ),
                         CustomElevatedButton(
-                          buttonTitle: "إنشاء حساب",
+                          buttonTitle: "تسجيل الدخول",
                           onPressed: () async {
-                            await _handleSignUp();
+                            await _handleLogin(context);
                           },
                         ),
                         CustomNavigationLink(
-                          title: "هل لديك حساب بالفعل! قم بـ - ",
-                          linkTitle: "تسجيل الدخول",
+                          title: "لا تمتلك حساب! قم بـ - ",
+                          linkTitle: "إنشاء حساب",
                           onTap: () {
-                            Navigator.popAndPushNamed(context, LoginView.id);
+                            Navigator.popAndPushNamed(context, SignupView.id);
                           },
                         ),
                       ],

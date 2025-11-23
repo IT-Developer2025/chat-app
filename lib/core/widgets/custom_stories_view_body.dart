@@ -1,8 +1,8 @@
-import 'package:chat_app/constants.dart';
+import 'package:chat_app/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 
-class ChatViewBody extends StatelessWidget {
-  const ChatViewBody({super.key});
+class StoriesViewBody extends StatelessWidget {
+  const StoriesViewBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -12,7 +12,7 @@ class ChatViewBody extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           Image.asset(kLogo, width: 100, height: 100),
-          Text("المحادثات"),
+          Text("الحالات"),
         ],
       ),
     );

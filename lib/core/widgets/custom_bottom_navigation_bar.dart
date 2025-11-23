@@ -1,4 +1,4 @@
-import 'package:chat_app/constants.dart';
+import 'package:chat_app/core/constants/constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
