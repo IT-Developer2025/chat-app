@@ -1,10 +1,10 @@
 import 'package:chat_app/core/constants/constants.dart';
 import 'package:chat_app/core/utils/show_snack_bar.dart';
+import 'package:chat_app/core/widgets/custom_list_tile.dart';
+import 'package:chat_app/core/widgets/custom_user_accounts_drawer_header.dart';
+import 'package:chat_app/core/widgets/custome_alert_dialog.dart';
+import 'package:chat_app/features/auth/login_view.dart';
 import 'package:chat_app/features/auth/services/auth_service.dart';
-import 'package:chat_app/views/login_view.dart';
-import 'package:chat_app/views/widgets/custom_list_tile.dart';
-import 'package:chat_app/views/widgets/custom_user_accounts_drawer_header.dart';
-import 'package:chat_app/views/widgets/custome_alert_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 

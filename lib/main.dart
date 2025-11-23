@@ -1,8 +1,8 @@
 import 'package:chat_app/features/auth/login_view.dart';
+import 'package:chat_app/features/auth/signup_view.dart';
+import 'package:chat_app/features/home/home_view.dart';
 import 'package:flutter/material.dart';
 import 'package:chat_app/core/constants/constants.dart';
-import 'package:chat_app/views/home_view.dart';
-import 'package:chat_app/views/signup_view.dart';
 import 'package:chat_app/features/splash/splash_view.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:chat_app/firebase_options.dart';

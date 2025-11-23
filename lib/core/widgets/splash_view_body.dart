@@ -1,5 +1,5 @@
 import 'package:chat_app/core/constants/constants.dart';
-import 'package:chat_app/views/login_view.dart';
+import 'package:chat_app/features/auth/login_view.dart';
 import 'package:flutter/material.dart';
 
 class SplashViewBody extends StatefulWidget {

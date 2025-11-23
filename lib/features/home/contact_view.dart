@@ -1,4 +1,4 @@
-import 'package:chat_app/views/widgets/custom_contact_view_body.dart';
+import 'package:chat_app/core/widgets/custom_contact_view_body.dart';
 import 'package:flutter/material.dart';
 
 class ContactView extends StatelessWidget {

@@ -1,12 +1,12 @@
 import 'package:chat_app/core/constants/constants.dart';
 import 'package:chat_app/core/utils/email_password_validation.dart';
 import 'package:chat_app/core/utils/show_snack_bar.dart';
+import 'package:chat_app/core/widgets/custom_elevated_button.dart';
+import 'package:chat_app/core/widgets/custom_navigation_link.dart';
+import 'package:chat_app/core/widgets/custom_text_field.dart';
 import 'package:chat_app/features/auth/services/auth_service.dart';
-import 'package:chat_app/views/home_view.dart';
-import 'package:chat_app/views/signup_view.dart';
-import 'package:chat_app/views/widgets/custom_elevated_button.dart';
-import 'package:chat_app/views/widgets/custom_navigation_link.dart';
-import 'package:chat_app/views/widgets/custom_text_field.dart';
+import 'package:chat_app/features/auth/signup_view.dart';
+import 'package:chat_app/features/home/home_view.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';

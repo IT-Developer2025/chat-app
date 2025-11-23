@@ -1,4 +1,4 @@
-import 'package:chat_app/views/widgets/custom_drawer_body.dart';
+import 'package:chat_app/core/widgets/custom_drawer_body.dart';
 import 'package:flutter/material.dart';
 
 class CustomDrawer extends StatelessWidget {

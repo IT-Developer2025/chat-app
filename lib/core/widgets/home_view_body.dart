@@ -1,9 +1,9 @@
-import 'package:chat_app/views/chat_view.dart';
-import 'package:chat_app/views/contact_view.dart';
-import 'package:chat_app/views/stories_view.dart';
-import 'package:chat_app/views/widgets/custom_app_bar.dart';
-import 'package:chat_app/views/widgets/custom_bottom_navigation_bar.dart';
-import 'package:chat_app/views/widgets/custom_drawer.dart';
+import 'package:chat_app/core/widgets/custom_app_bar.dart';
+import 'package:chat_app/core/widgets/custom_bottom_navigation_bar.dart';
+import 'package:chat_app/core/widgets/custom_drawer.dart';
+import 'package:chat_app/features/home/chat_view.dart';
+import 'package:chat_app/features/home/contact_view.dart';
+import 'package:chat_app/features/home/stories_view.dart';
 import 'package:flutter/material.dart';
 
 class HomeViewBody extends StatefulWidget {
