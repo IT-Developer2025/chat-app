@@ -16,7 +16,7 @@ class HomeViewBody extends StatefulWidget {
 class _HomeViewBodyState extends State<HomeViewBody> {
   int currentIndex = 0;
 
-  // using CONST keyword, for better performance!.
+  // using CONST keyword, better for performance!.
   final views = const [ChatView(), StoriesView(), ContactView()];
 
   @override

@@ -29,7 +29,7 @@ class CustomDrawerBody extends StatelessWidget {
                   message: 'تم تسجيل الخروج بنجاح',
                   backgroundColor: Colors.green,
                 );
-                Navigator.popAndPushNamed(context, LoginView.id);
+                Navigator.popUntil(context, ModalRoute.withName(LoginView.id));
               } catch (e) {
                 showSnackBar(
                   context: context,

@@ -29,7 +29,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
 
   @override
   void dispose() {
-    // Disposing controllers after using them, for better performance!
+    // Disposing controllers after using them, better for performance!
     _emailController.dispose();
     _passwordController.dispose();
     super.dispose();
@@ -59,9 +59,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
             message: 'تم تسجيل دخولك بنجاح',
             backgroundColor: Colors.green,
           );
-          if (mounted) {
-            Navigator.popAndPushNamed(context, HomeView.id);
-          }
+          Navigator.pushNamed(context, HomeView.id);
         } on FirebaseAuthException catch (e) {
           String message;
           if (e.code == 'user-not-found') {
@@ -178,7 +176,7 @@ class _LoginViewBodyState extends State<LoginViewBody> {
                           title: "لا تمتلك حساب! قم بـ - ",
                           linkTitle: "إنشاء حساب",
                           onTap: () {
-                            Navigator.popAndPushNamed(context, SignupView.id);
+                            Navigator.pushNamed(context, SignupView.id);
                           },
                         ),
                       ],

@@ -4,7 +4,6 @@ import 'package:chat_app/core/utils/show_snack_bar.dart';
 import 'package:chat_app/core/widgets/custom_elevated_button.dart';
 import 'package:chat_app/core/widgets/custom_navigation_link.dart';
 import 'package:chat_app/core/widgets/custom_text_field.dart';
-import 'package:chat_app/features/auth/login_view.dart';
 import 'package:chat_app/features/auth/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -58,9 +57,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
             message: "تم إنشاء حسابك بنجاح",
             backgroundColor: Colors.green,
           );
-          if (mounted) {
-            Navigator.pushReplacementNamed(context, LoginView.id);
-          }
+          Navigator.pop(context);
         } on FirebaseAuthException catch (e) {
           String message;
           if (e.code == 'weak-password') {
@@ -174,7 +171,7 @@ class _SignupViewBodyState extends State<SignupViewBody> {
                           title: "هل لديك حساب بالفعل! قم بـ - ",
                           linkTitle: "تسجيل الدخول",
                           onTap: () {
-                            Navigator.popAndPushNamed(context, LoginView.id);
+                            Navigator.pop(context);
                           },
                         ),
                       ],
